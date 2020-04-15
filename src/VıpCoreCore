@@ -1,0 +1,62 @@
+<?php
+
+namespace VıpCore;
+
+use pocketmine\plugin\PluginBase;
+use pocketmine\command\Command;
+use pocketmine\{Player, Server};
+use pocketmine\command\CommandSender;
+use jojoe77777\FormAPI;
+
+class Core extends PluginBase{
+
+	public function onEnable(){
+		$this->getLogger()->info("VipCore Aktif - AydınPMT");
+	}
+
+	public function onCommand(CommandSender $o, Command $kmt, string $label, array $array): bool{
+		if($kmt->getName() == "vippanel"){
+			$this->vpForm($o);
+		}
+		return true;
+	}
+
+	public function vpForm(Player $o){
+		$f = $this->getServer()->getPluginManager()->getPlugin("FormAPI")->createCustomForm(function (Player $o, array $data){
+			$re = $data[0];
+			if($re === null){
+				return true;
+			}
+			switch($re){
+				case 0:
+            $o->sendPopup("§aBaşarıyla Fly Açıldı");
+			$o->setAllowFlight(true);
+				break;
+				case 1:
+			$o->sendPopup("§cBaşarıyla Fly Kapandı");
+			$o->setAllowFlight(false);
+			    break;
+			    case 2:
+			$o->sendPopup("§aBaşarıyla Canın Doldu");
+			$o->setHealth(20);
+			    break;
+			    case 3:
+			$o->sendPopup("§aBaşarıyla Açlığın Doldu");
+			$o->setFood(20);
+			    break;
+			    case 4:
+			$o->sendPopup("§aElindeki Eşya Başarıyla Tamir Edildi");
+ $item =
+$o->getInventory()->getItemInHand();
+$item->setDamage(0);
+$o->getInventory()->setItemInHand($item);
+			    break;
+			}
+		});
+
+		$f->setTitle("§3VIP§f Panel");
+		$f->addDropDown("§c",["Fly Aç","Fly Kapat","Canını Doldurdur","Yemek Ye","Tamir Bas"]);
+		$f->addLabel("§cİstediin özelliği seç ve gönder.");
+		$f->sendToPlayer($o);
+	}
+}
